@@ -1,12 +1,12 @@
 import { pipeline } from "@xenova/transformers";
 import DAPTimer from "@kingdanx/dap-timer";
 
-class DAPTranslate {
+export default class DAPTranslate {
   constructor() {
     this.languages = new Map();
   }
 
   async loadModels() {}
 
-  translate() {}
+  async translate(text, language) {}
 }
