@@ -1,5 +1,6 @@
 import { test, expect } from "bun:test";
-import DAPTranslate, { supportedLanguages } from "../models/dap-translate";
+import DAPTranslate from "../models/dap-translate";
+import { supportedLanguages } from "../modules/model-importer";
 
 const translator = new DAPTranslate();
 

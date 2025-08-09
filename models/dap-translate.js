@@ -1,27 +1,6 @@
-import path from "path";
 import { randomUUID } from "crypto";
-import { pipeline, TranslationPipeline } from "@xenova/transformers";
 import DAPTimer from "@kingdanx/dap-timer";
-
-/**
- * @type {Map<string, TranslationPipeline}
- */
-const languagesMap = new Map();
-export const supportedLanguages = ["es", "fr", "de", "it"];
-
-const modelConfig = {
-  local_files_only: true,
-  cache_dir: path.join(import.meta.dir, "..", "language-models"),
-};
-
-for (const language of supportedLanguages) {
-  const translator = await pipeline(
-    "translation",
-    `Xenova/opus-mt-en-${language}`,
-    modelConfig
-  );
-  languagesMap.set(language, translator);
-}
+import { languagesMap } from "../modules/model-importer";
 
 /**
  * @class - translates multiple languages to english

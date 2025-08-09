@@ -40,7 +40,10 @@ build/Release
 # Dependency directories
 node_modules/
 jspm_packages/
+language-models/*
 
+# But keep this placeholder file
+!language-models/.gitkeep
 # Snowpack dependency directory (https://snowpack.dev/)
 web_modules/
 
