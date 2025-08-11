@@ -1,6 +1,10 @@
 import fs from "fs/promises";
 import path from "path";
+import { fileURLToPath, pathToFileURL } from "url";
 import { pipeline, TranslationPipeline } from "@xenova/transformers";
+
+
+process.on("uncaughtException", (e) => console.log(e))
 
 /**
  * @type {Map<string, TranslationPipeline}
@@ -15,29 +19,26 @@ const unloadedModels = supportedLanguages.map((l) => {
   };
 });
 
-const modelConfig = {
-  local_files_only: true,
-  cache_dir: path.join(import.meta.dir, "..", "language-models"),
-};
-
-const defaultCache = path.join(
-  import.meta.dir,
-  "..",
-  "node_modules",
-  "@xenova",
-  "transformers",
-  ".cache",
-  "Xenova"
+const transformersPath = fileURLToPath(
+  import.meta.resolve("@xenova/transformers")
 );
 
+const modelConfig = {
+  local_files_only: true,
+  cache_dir: path.join(import.meta.dirname, "..", "language-models"),
+};
+
+const defaultCache = path.join(transformersPath, "..", "..", ".cache", "Xenova");
+
 const moduleCache = path.join(
-  import.meta.dir,
+  import.meta.dirname,
   "..",
   "language-models",
   "Xenova"
 );
 
 await fs.mkdir(defaultCache, { recursive: true });
+await fs.mkdir(moduleCache, { recursive: true });
 
 const cachedFiles = await fs.readdir(defaultCache);
 console.log(cachedFiles);
@@ -62,7 +63,6 @@ for (const file of files) {
       unloadedModels.findIndex((f) => f.model === file),
       1
     );
-    console.log(unloadedModels);
   } else {
     console.log("FILE NOT FOUND", file);
   }
