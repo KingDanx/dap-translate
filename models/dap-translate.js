@@ -1,6 +1,6 @@
 import { randomUUID } from "crypto";
 import DAPTimer from "@kingdanx/dap-timer";
-import { languagesMap } from "../modules/model-importer";
+import { languagesMap } from "../modules/model-importer.js";
 
 /**
  * @class - translates multiple languages to english
