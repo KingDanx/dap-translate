@@ -42,6 +42,6 @@ export default class DAPTranslate {
     const [translation] = await translator(this.#processInput(text));
     const process_duration = timer.timeEnd(id);
 
-    return { id, text, ...translation, process_duration };
+    return { id, text, ...translation, language, process_duration };
   }
 }
