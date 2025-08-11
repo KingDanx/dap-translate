@@ -1,8 +1,9 @@
 {
   "name": "@kingdanx/dap-translate",
   "module": "models/dap-translate.js",
-  "version": "1.0.1",
-  "date": "2025.08.09",
+  "main": "models/dap-translate.js",
+  "version": "1.0.2",
+  "date": "2025.08.11",
   "type": "module",
   "scripts": {
     "build": "bun ./build/build.js"
