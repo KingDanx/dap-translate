@@ -44,6 +44,22 @@ cd dap-translate
 bun install
 ```
 
+OR
+
+
+```bash
+bun install @kingdanx/dap-translate
+```
+
+OR
+
+
+```bash
+npm install @kingdanx/dap-translate
+```
+
+
+
 ---
 
 ## Usage
