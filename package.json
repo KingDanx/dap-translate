@@ -2,8 +2,8 @@
   "name": "@kingdanx/dap-translate",
   "module": "models/dap-translate.js",
   "main": "index.js",
-  "version": "1.0.8",
-  "date": "2025.08.19",
+  "version": "1.0.9",
+  "date": "2025.12.19",
   "type": "module",
   "scripts": {
     "build": "bun ./build/build.js"
@@ -15,7 +15,7 @@
     "typescript": "^5"
   },
   "dependencies": {
-    "@kingdanx/dap-timer": "^1.0.3",
+    "@kingdanx/dap-timer": "^1.0.12",
     "@xenova/transformers": "^2.17.2"
   }
 }

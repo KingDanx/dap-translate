@@ -1,10 +1,9 @@
 import fs from "fs/promises";
 import path from "path";
-import { fileURLToPath, pathToFileURL } from "url";
+import { fileURLToPath } from "url";
 import { pipeline, TranslationPipeline } from "@xenova/transformers";
 
-
-process.on("uncaughtException", (e) => console.log(e))
+process.on("uncaughtException", (e) => console.log(e));
 
 /**
  * @type {Map<string, TranslationPipeline}
@@ -28,7 +27,13 @@ const modelConfig = {
   cache_dir: path.join(import.meta.dirname, "..", "language-models"),
 };
 
-const defaultCache = path.join(transformersPath, "..", "..", ".cache", "Xenova");
+const defaultCache = path.join(
+  transformersPath,
+  "..",
+  "..",
+  ".cache",
+  "Xenova"
+);
 
 const moduleCache = path.join(
   import.meta.dirname,

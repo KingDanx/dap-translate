@@ -1,4 +1,4 @@
-import { randomUUID } from "crypto";
+import { randomUUID } from "node:crypto";
 import DAPTimer from "@kingdanx/dap-timer";
 import { languagesMap } from "../modules/model-importer.js";
 

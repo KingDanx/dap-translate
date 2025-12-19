@@ -1,2 +1,2 @@
-import DAPTranslate from "./models/dap-translate";
+import DAPTranslate from "./models/dap-translate.js";
 export default DAPTranslate;
