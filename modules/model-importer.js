@@ -1,7 +1,7 @@
 import fs from "fs/promises";
 import path from "path";
 import { fileURLToPath } from "url";
-import { pipeline, TranslationPipeline } from "@xenova/transformers";
+import { pipeline, TranslationPipeline } from "@huggingface/transformers";
 
 process.on("uncaughtException", (e) => console.log(e));
 
@@ -19,7 +19,7 @@ const unloadedModels = supportedLanguages.map((l) => {
 });
 
 const transformersPath = fileURLToPath(
-  import.meta.resolve("@xenova/transformers")
+  import.meta.resolve("@huggingface/transformers")
 );
 
 const modelConfig = {
