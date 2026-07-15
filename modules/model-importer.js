@@ -45,12 +45,17 @@ console.log("FILES:", files);
 for (const file of files) {
   const model = unloadedModels.find((m) => m.model === file);
   if (model) {
-    await pipeline("translation", `Xenova/${file}`, modelConfig);
+    const translator = await pipeline(
+      "translation",
+      `Xenova/${file}`,
+      modelConfig
+    );
 
     unloadedModels.splice(
       unloadedModels.findIndex((f) => f.model === file),
       1
     );
+    languagesMap.set(model.language, translator);
   } else {
     console.log("FILE NOT FOUND", file);
   }
