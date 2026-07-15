@@ -1,7 +1,10 @@
 import fs from "fs/promises";
 import path from "path";
 import { fileURLToPath } from "url";
-import { pipeline, TranslationPipeline } from "@huggingface/transformers";
+import { env, pipeline, TranslationPipeline } from "@huggingface/transformers";
+
+env.allowRemoteModels = true;
+env.localFilesOnly = false;
 
 process.on("uncaughtException", (e) => console.log(e));
 
@@ -18,52 +21,33 @@ const unloadedModels = supportedLanguages.map((l) => {
   };
 });
 
-const transformersPath = fileURLToPath(
-  import.meta.resolve("@huggingface/transformers")
-);
+// Single canonical root for our own persistent model cache. Every path below
+// is derived from this ONE value so env.cacheDir, modelConfig.cache_dir, and
+// our own fs.readdir/fs.cp bookkeeping can never disagree with each other.
+const modelsRoot = path.join(import.meta.dirname, "..", "language-models");
+const moduleCache = path.join(modelsRoot, "Xenova");
+
+// transformers.js appends "<namespace>/<model-name>" onto cache_dir itself,
+// so cacheDir should point at the root, not at ".../Xenova".
+env.cacheDir = modelsRoot;
+env.localModelPath = modelsRoot;
 
 const modelConfig = {
   local_files_only: true,
-  cache_dir: path.join(import.meta.dirname, "..", "language-models"),
+  cache_dir: modelsRoot,
 };
 
-const defaultCache = path.join(
-  transformersPath,
-  "..",
-  "..",
-  ".cache",
-  "Xenova"
-);
-
-const moduleCache = path.join(
-  import.meta.dirname,
-  "..",
-  "language-models",
-  "Xenova"
-);
-
-await fs.mkdir(defaultCache, { recursive: true });
 await fs.mkdir(moduleCache, { recursive: true });
-
-const cachedFiles = await fs.readdir(defaultCache);
-console.log(cachedFiles);
 const files = await fs.readdir(moduleCache);
 
 console.log("FILES:", files);
 
+// Pass 1: models already present in our own module cache — load directly.
 for (const file of files) {
   const model = unloadedModels.find((m) => m.model === file);
   if (model) {
-    const translator = await pipeline(
-      "translation",
-      `Xenova/${file}`,
-      modelConfig
-    );
-    languagesMap.set(model.language, translator);
-    cachedFiles.splice(
-      cachedFiles.findIndex((f) => f === file),
-      1
-    );
+    await pipeline("translation", `Xenova/${file}`, modelConfig);
+
     unloadedModels.splice(
       unloadedModels.findIndex((f) => f.model === file),
       1
@@ -73,36 +57,12 @@ for (const file of files) {
   }
 }
 
-console.log("REMAINING CAHCE", cachedFiles);
-
-for (const file of cachedFiles) {
-  const model = unloadedModels.find((m) => m.model === file);
-  if (model) {
-    await fs.cp(path.join(defaultCache, file), path.join(moduleCache, file), {
-      recursive: true,
-    });
-    const translator = await pipeline(
-      "translation",
-      `Xenova/${file}`,
-      modelConfig
-    );
-    unloadedModels.splice(
-      unloadedModels.findIndex((f) => f.model === file),
-      1
-    );
-    languagesMap.set(model.language, translator);
-  }
-}
-
 console.log("UNLOADED:", unloadedModels);
 
+// Pass 3: models not found anywhere locally — download (remote allowed)
 for (const model of unloadedModels) {
   await pipeline("translation", `Xenova/${model.model}`);
-  await fs.cp(
-    path.join(defaultCache, model.model),
-    path.join(moduleCache, model.model),
-    { recursive: true }
-  );
+
   const translator = await pipeline(
     "translation",
     `Xenova/${model.model}`,
