@@ -1,6 +1,5 @@
 import fs from "fs/promises";
 import path from "path";
-import { fileURLToPath } from "url";
 import { env, pipeline, TranslationPipeline } from "@huggingface/transformers";
 
 env.allowRemoteModels = true;
